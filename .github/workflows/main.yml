@@ -51,6 +51,19 @@ jobs:
         run: bash ci/build-docker.sh
       - name: push docker
         run: bash ci/push-docker.sh
-
+  SnykTest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone down repository
+        uses: actions/checkout@v4
+      - name: snyk-install
+        run: |
+           curl --compressed https://downloads.snyk.io/cli/stable/snyk-linux -o snyk
+           chmod +x ./snyk
+           mv ./snyk /usr/local/bin/
+      - name: snyk-out
+        run: snyk auth ${{secrets.SNYK_API}}
+      - name: snyk-test
+        run: snyk test --all-projects
 
       
